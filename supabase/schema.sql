@@ -1,6 +1,6 @@
 -- ==============================================================================
--- BuiltWhileBroke: Community Requested Tools & Feedback Schema
--- Database Scope: Used EXCLUSIVELY for the Community Requested Tools Directory
+-- BuiltWhileBroke: Community Requested Tools, Feedback & Global Usage Schema
+-- Database Scope: Used EXCLUSIVELY for the Community Directory & Anonymous Global Use Counters.
 -- All developer workbenches (PGlite, SQLime, CyberChef, etc.) remain 100% client-side.
 -- ==============================================================================
 
@@ -36,15 +36,24 @@ create table if not exists public.tool_upvotes (
   unique(tool_id, client_id)
 );
 
+-- 4. Create table for anonymous global tool usage counters
+create table if not exists public.global_tool_stats (
+  tool_id text primary key,
+  use_count bigint not null default 0,
+  last_used_at timestamptz default now()
+);
+
 -- Create index on foreign keys for fast joins & reads
 create index if not exists idx_tool_comments_tool_id on public.tool_comments(tool_id);
 create index if not exists idx_tool_upvotes_tool_id on public.tool_upvotes(tool_id);
 create index if not exists idx_tool_requests_status on public.tool_requests(status);
+create index if not exists idx_global_tool_stats_uses on public.global_tool_stats(use_count desc);
 
 -- Enable Row Level Security (RLS)
 alter table public.tool_requests enable row level security;
 alter table public.tool_comments enable row level security;
 alter table public.tool_upvotes enable row level security;
+alter table public.global_tool_stats enable row level security;
 
 -- Policies for tool_requests
 create policy "Allow public read access on tool_requests"
@@ -82,3 +91,37 @@ create policy "Allow public delete access on tool_upvotes"
   on public.tool_upvotes for delete
   using (true);
 
+-- Policies for global_tool_stats
+create policy "Allow public read on global_tool_stats"
+  on public.global_tool_stats for select
+  using (true);
+
+create policy "Allow public insert on global_tool_stats"
+  on public.global_tool_stats for insert
+  with check (true);
+
+create policy "Allow public update on global_tool_stats"
+  on public.global_tool_stats for update
+  using (true)
+  with check (true);
+
+-- Atomic increment function for global tool usage
+create or replace function public.increment_global_tool_usage(target_tool_id text)
+returns bigint
+language plpgsql
+security definer
+as $$
+declare
+  new_total bigint;
+begin
+  insert into public.global_tool_stats (tool_id, use_count, last_used_at)
+  values (target_tool_id, 1, now())
+  on conflict (tool_id)
+  do update set
+    use_count = public.global_tool_stats.use_count + 1,
+    last_used_at = now()
+  returning use_count into new_total;
+
+  return new_total;
+end;
+$$;

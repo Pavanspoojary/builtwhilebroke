@@ -36,6 +36,7 @@ import {
 import { GithubIcon } from './Icons';
 import { ToolItem } from '../types/tool';
 import { sound } from '../lib/soundFx';
+import { formatUsageCount } from '../lib/toolUsage';
 
 interface ToolCardProps {
   tool: ToolItem;
@@ -171,10 +172,10 @@ export const ToolCard: React.FC<ToolCardProps> = ({
             {usageCount !== undefined && usageCount > 0 && (
               <div
                 className="flex items-center gap-1 rounded-full bg-zinc-100 border border-zinc-200/90 px-2 py-0.5 text-[10px] font-mono font-bold text-zinc-800 shadow-2xs animate-in fade-in"
-                title={`Used ${usageCount} time${usageCount > 1 ? 's' : ''}`}
+                title={`Used globally ${usageCount.toLocaleString()} time${usageCount > 1 ? 's' : ''}`}
               >
                 <Zap className="h-2.5 w-2.5 text-zinc-900 fill-zinc-900" />
-                <span>{usageCount}</span>
+                <span>{formatUsageCount(usageCount)}</span>
               </div>
             )}
             <div className="flex shrink-0 items-center gap-1 rounded-full bg-zinc-50 border border-zinc-200/80 px-2.5 py-0.5 text-[11px] font-mono font-bold text-zinc-700 shadow-2xs group-hover:border-zinc-300 transition-colors">

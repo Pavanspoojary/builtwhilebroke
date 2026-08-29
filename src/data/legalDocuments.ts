@@ -165,9 +165,9 @@ export const LEGAL_DOCUMENTS: LegalDocument[] = [
         ],
       },
       {
-        sectionTitle: '4. Database Usage Scope (Community Requested Tools Directory Only)',
+        sectionTitle: '4. Database Usage Scope (Community Directory & Global Anonymous Launch Counters)',
         paragraphs: [
-          'BuiltWhileBroke utilizes a managed cloud database (Supabase) strictly and exclusively for the Community Requested Tools Directory (/requested) and feedback widgets. This database persists public tool requests, anonymous upvote counters, and public builder comments.',
+          'BuiltWhileBroke utilizes a managed cloud database (Supabase) strictly and exclusively for: (1) The Community Requested Tools Directory (/requested) to persist public tool requests, anonymous upvote counters, and builder comments; and (2) Global aggregate tool launch counters (storing only anonymous numerical use totals per tool ID with zero IP addresses, zero device fingerprints, and zero user payload data).',
           'Under no circumstances is Supabase or any remote database used to ingest, store, inspect, or log user payload data from any of the 34+ developer workbenches (e.g. PGlite queries, SQLime data, Hat.sh files, Inpaint images, Documenso signatures, CyberChef recipes). All workbench processing remains 100% in-browser with zero telemetry.',
         ],
       },
@@ -213,15 +213,23 @@ export const LEGAL_DOCUMENTS: LegalDocument[] = [
         ],
       },
       {
-        sectionTitle: '2. Sandboxing & Isolation',
+        sectionTitle: '2. Sandboxing, COEP & Process Isolation',
         paragraphs: [
-          'Every workbench runs inside isolated execution contexts with strict Content Security Policy headers, preventing unauthorized cross-origin resource access and shielding user workloads from cross-site scripting vulnerabilities.',
+          'Every workbench runs inside isolated execution contexts enforced by Cross-Origin-Embedder-Policy (COEP: credentialless), Cross-Origin-Opener-Policy (COOP: same-origin-allow-popups), Origin-Agent-Cluster process isolation, and strict Content Security Policy (CSP) headers.',
+          'These headers guarantee high-resolution WebAssembly timers (SharedArrayBuffer) while strictly shielding local browsing sessions from Spectre side-channel attacks and cross-site scripting vulnerabilities.',
         ],
       },
       {
-        sectionTitle: '3. Vulnerability Reporting',
+        sectionTitle: '3. Transport Security, OCSP Stapling & TLS 1.3',
         paragraphs: [
-          'We take platform security with utmost seriousness. If you discover a potential vulnerability, bug, or security flaw within any interface, please report it directly to the repository maintainers via GitHub Issues for expedited remediation.',
+          'BuiltWhileBroke mandates strict HSTS (Strict-Transport-Security with includeSubDomains and preload), TLS 1.3 protocol encryption, and automated OCSP Stapling (Online Certificate Status Protocol) across global edge networks to verify SSL/TLS certificate revocation in real time without client latency penalties.',
+        ],
+      },
+      {
+        sectionTitle: '4. PGP-Signed Vulnerability Disclosure (RFC 9116)',
+        paragraphs: [
+          'We adhere to RFC 9116 responsible disclosure standards. Security researchers may inspect our canonical security metadata at /.well-known/security.txt and encrypt sensitive vulnerability reports using our published OpenPGP Public Key (/pgp-key.txt).',
+          'Reports can be submitted directly to our maintainers via GitHub Security Advisories for expedited remediation.',
         ],
       },
     ],
