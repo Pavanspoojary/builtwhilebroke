@@ -33,19 +33,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   return (
     <section className="relative pt-12 pb-12 sm:pt-20 sm:pb-16">
       <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
-        {/* Top Badges: Live Status & Supporter Pill */}
-        <div className="mb-6 flex flex-wrap items-center justify-center gap-2.5">
-          {/* Live Zero-Telemetry Status */}
-          <div className="inline-flex items-center gap-2 rounded-full border border-zinc-200/90 bg-white/90 px-3.5 py-1.5 text-xs font-semibold text-zinc-700 shadow-2xs backdrop-blur-md">
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
-            </span>
-            <span className="font-mono text-[11px] text-zinc-800">100% In-Browser</span>
-            <span className="text-zinc-300">•</span>
-            <span className="text-[11px] text-zinc-500 font-mono">Zero Cloud Tracking</span>
-          </div>
-
+        {/* Top Supporter Pill */}
+        <div className="mb-6 flex justify-center">
           <BuyMeACoffeeButton variant="hero" />
         </div>
 
