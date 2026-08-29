@@ -1,8 +1,13 @@
 import { useState, useEffect } from 'react';
 import { supabase } from './supabaseClient';
 
-const USAGE_STORAGE_KEY = 'bwb_tool_usage_counts';
+const USAGE_STORAGE_KEY = 'bwb_tool_usage_real_v1';
 const USAGE_EVENT_NAME = 'bwb_tool_usage_updated';
+
+// Clean any legacy mock storage keys if present
+try {
+  localStorage.removeItem('bwb_tool_usage_counts');
+} catch {}
 
 // In-memory cache for real usage counts (starts at 0, no fake data)
 let cachedCounts: Record<string, number> = {};
@@ -47,7 +52,7 @@ export const fetchGlobalToolUsageStats = async (): Promise<Record<string, number
       const merged: Record<string, number> = { ...cachedCounts };
       for (const row of data) {
         if (row.tool_id) {
-          merged[row.tool_id] = Math.max(merged[row.tool_id] || 0, Number(row.use_count) || 0);
+          merged[row.tool_id] = Number(row.use_count) || 0;
         }
       }
       cachedCounts = merged;

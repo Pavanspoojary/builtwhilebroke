@@ -35,6 +35,7 @@ const HoppscotchWorkbench = React.lazy(() => import('../components/workbenches/H
 const ScreenshotToCodeWorkbench = React.lazy(() => import('../components/workbenches/ScreenshotToCodeWorkbench').then(m => ({ default: m.ScreenshotToCodeWorkbench })));
 const DocumensoWorkbench = React.lazy(() => import('../components/workbenches/DocumensoWorkbench').then(m => ({ default: m.DocumensoWorkbench })));
 const InpaintWebWorkbench = React.lazy(() => import('../components/workbenches/InpaintWebWorkbench').then(m => ({ default: m.InpaintWebWorkbench })));
+const WebCheckWorkbench = React.lazy(() => import('../components/workbenches/WebCheckWorkbench').then(m => ({ default: m.WebCheckWorkbench })));
 
 const WorkbenchLoadingSkeleton: React.FC = () => (
   <div className="flex h-full w-full flex-col items-center justify-center bg-[#fafafa]">
@@ -269,7 +270,8 @@ export const ToolDetailPage: React.FC<ToolDetailPageProps> = ({ onViewAudit }) =
       tool.id === 'hoppscotch' ||
       tool.id === 'screenshot-to-code' ||
       tool.id === 'documenso' ||
-      tool.id === 'inpaint-web'
+      tool.id === 'inpaint-web' ||
+      tool.id === 'web-check'
     ) {
       return (
         <React.Suspense fallback={<WorkbenchLoadingSkeleton />}>
@@ -283,6 +285,7 @@ export const ToolDetailPage: React.FC<ToolDetailPageProps> = ({ onViewAudit }) =
           {tool.id === 'screenshot-to-code' && <ScreenshotToCodeWorkbench />}
           {tool.id === 'documenso' && <DocumensoWorkbench />}
           {tool.id === 'inpaint-web' && <InpaintWebWorkbench />}
+          {tool.id === 'web-check' && <WebCheckWorkbench />}
         </React.Suspense>
       );
     }
