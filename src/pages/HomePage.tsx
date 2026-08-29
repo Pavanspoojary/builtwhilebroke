@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { sound } from '../lib/soundFx';
 import { useToolUsageCounts, incrementToolUsage } from '../lib/toolUsage';
+import { SeoHead } from '../components/SeoHead';
 
 interface HomePageProps {
   onViewAudit: (tool: ToolItem) => void;
@@ -75,6 +76,8 @@ export const HomePage: React.FC<HomePageProps> = ({ onViewAudit }) => {
 
   return (
     <div className="flex flex-col min-h-screen bg-[#fafafa]">
+      <SeoHead pageType="home" />
+
       {/* Hero Section */}
       <HeroSection
         searchQuery={searchQuery}

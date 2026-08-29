@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { ArrowLeft, ChevronRight, Printer, Share2, Check, ShieldCheck } from 'lucide-react';
 import { LEGAL_DOCUMENTS, LegalDocument } from '../data/legalDocuments';
 import { sound } from '../lib/soundFx';
+import { SeoHead } from '../components/SeoHead';
 
 export const LegalPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -51,6 +52,12 @@ export const LegalPage: React.FC = () => {
 
   return (
     <div className="min-h-screen py-16 sm:py-24">
+      <SeoHead
+        title={selectedDoc ? selectedDoc.title : 'Legal Policies & Compliance Hub'}
+        description={selectedDoc ? selectedDoc.summary : 'Explore BuiltWhileBroke terms of service, privacy policies, acceptable use, and zero-telemetry agreements.'}
+        pageType="legal"
+      />
+
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         {!selectedDoc ? (
           /* Legal Hub Grid View (Matches reference design exactly) */

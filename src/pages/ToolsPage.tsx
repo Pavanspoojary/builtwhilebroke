@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { sound } from '../lib/soundFx';
 import { useToolUsageCounts, incrementToolUsage } from '../lib/toolUsage';
+import { SeoHead } from '../components/SeoHead';
 
 interface ToolsPageProps {
   onViewAudit: (tool: ToolItem) => void;
@@ -100,8 +101,16 @@ export const ToolsPage: React.FC<ToolsPageProps> = ({ onViewAudit }) => {
     navigate(`/tools/${tool.id}`);
   };
 
+  const activeCategoryObj = CATEGORIES.find((c) => c.id === activeCategory);
+
   return (
     <div className="flex flex-col min-h-screen bg-[#fafafa]">
+      <SeoHead
+        title={activeCategory !== 'all' ? `${activeCategoryObj?.name || 'Tools'} Directory` : 'Tools Directory'}
+        description={`Explore ${TOOLS.length} curated open-source developer utilities, diagram engines, and client-side sandboxes running 100% in-browser.`}
+        pageType="tools"
+      />
+
       {/* Minimal Header */}
       <div className="border-b border-zinc-200/80 bg-white/60 py-10">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

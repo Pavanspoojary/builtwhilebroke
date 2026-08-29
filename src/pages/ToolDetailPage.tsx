@@ -31,6 +31,7 @@ import { ScreenshotToCodeWorkbench } from '../components/workbenches/ScreenshotT
 import { DocumensoWorkbench } from '../components/workbenches/DocumensoWorkbench';
 import { InpaintWebWorkbench } from '../components/workbenches/InpaintWebWorkbench';
 import { incrementToolUsage, getToolUsageCounts } from '../lib/toolUsage';
+import { SeoHead } from '../components/SeoHead';
 
 interface ToolDetailPageProps {
   onViewAudit: (tool: ToolItem) => void;
@@ -334,6 +335,8 @@ export const ToolDetailPage: React.FC<ToolDetailPageProps> = ({ onViewAudit }) =
 
   return (
     <div className="fixed inset-0 z-30 flex flex-col h-screen w-screen bg-[#fafafa] overflow-hidden select-none">
+      <SeoHead tool={tool} pageType="tool-detail" />
+
       {/* Sleek Top Navigation Bar (Hidden in Full Focus Mode) */}
       {!isFocusMode && (
         <header className="shrink-0 flex h-14 items-center justify-between border-b border-zinc-200/80 bg-white/95 px-3 sm:px-5 backdrop-blur-2xl z-40 specular-rim shadow-sm">
