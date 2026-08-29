@@ -6,6 +6,9 @@ import {
   RotateCcw,
   ShieldCheck,
   HardDrive,
+  Layers,
+  Database,
+  Archive,
   ChevronDown,
   ChevronUp,
   Loader2,
@@ -153,20 +156,20 @@ export const PrivacyModal: React.FC<PrivacyModalProps> = ({
                   <HardDrive className="h-3.5 w-3.5 text-zinc-600" />
                   <span>Disk Storage Quota Usage</span>
                 </div>
-                <span className="font-mono text-[11px] font-bold text-zinc-900">
+                <div className="font-mono text-xs font-bold text-zinc-950">
                   {formatBytes(storageInfo.estimatedBytes)}{' '}
-                  <span className="text-zinc-400 font-normal">
+                  <span className="text-zinc-400 font-normal font-mono text-[11px]">
                     / {storageInfo.quotaBytes > 0 ? formatBytes(storageInfo.quotaBytes) : 'Browser Quota'} ({usagePercent}%)
                   </span>
-                </span>
+                </div>
               </div>
 
               {/* Progress bar */}
-              <div className="h-2 w-full overflow-hidden rounded-full bg-zinc-200">
+              <div className="h-2 w-full overflow-hidden rounded-full bg-zinc-200/80 p-0.5">
                 <div
                   className="h-full bg-zinc-900 transition-all duration-500 rounded-full"
                   style={{
-                    width: `${Math.max(1, Math.min(100, parseFloat(usagePercent) * 10))}%`,
+                    width: `${Math.max(1, Math.min(100, (storageInfo.estimatedBytes / Math.max(storageInfo.quotaBytes, 1024 * 1024)) * 100))}%`,
                   }}
                 />
               </div>
@@ -198,25 +201,28 @@ export const PrivacyModal: React.FC<PrivacyModalProps> = ({
                     sound.toggle();
                     setExpandedSection(expandedSection === 'local' ? null : 'local');
                   }}
-                  className={`group relative rounded-2xl border p-3.5 transition-all text-left cursor-pointer ${
+                  className={`group relative rounded-2xl border p-4 transition-all text-left cursor-pointer ${
                     expandedSection === 'local'
                       ? 'border-zinc-950 bg-zinc-950 text-white shadow-md'
-                      : 'border-zinc-200/80 bg-zinc-50/70 hover:border-zinc-300 hover:bg-white text-zinc-900 shadow-2xs'
+                      : 'border-zinc-200/90 bg-white hover:border-zinc-300 hover:bg-zinc-50/80 text-zinc-900 shadow-2xs'
                   }`}
                 >
-                  <div className="flex items-center justify-between mb-1">
-                    <span className={`text-[10px] font-mono uppercase font-bold ${expandedSection === 'local' ? 'text-zinc-300' : 'text-zinc-500'}`}>
-                      LocalStorage
-                    </span>
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-1.5">
+                      <HardDrive className={`h-3.5 w-3.5 ${expandedSection === 'local' ? 'text-zinc-300' : 'text-zinc-500'}`} />
+                      <span className={`text-[10px] font-mono uppercase font-bold ${expandedSection === 'local' ? 'text-zinc-300' : 'text-zinc-600'}`}>
+                        LocalStorage
+                      </span>
+                    </div>
                     {storageInfo.localStorageKeys > 0 && (
                       expandedSection === 'local' ? <ChevronUp className="h-3 w-3 text-zinc-400" /> : <ChevronDown className="h-3 w-3 text-zinc-400" />
                     )}
                   </div>
-                  <div className="font-mono text-xl font-extrabold">
+                  <div className="font-mono text-2xl font-extrabold tracking-tight">
                     {storageInfo.localStorageKeys}
                   </div>
-                  <div className={`text-[10px] font-mono mt-0.5 ${expandedSection === 'local' ? 'text-zinc-300' : 'text-zinc-400'}`}>
-                    Active keys
+                  <div className={`text-[10px] font-mono mt-1 ${expandedSection === 'local' ? 'text-zinc-300' : 'text-zinc-400'}`}>
+                    {storageInfo.localStorageKeys === 1 ? '1 active key' : `${storageInfo.localStorageKeys} active keys`}
                   </div>
                 </button>
 
@@ -227,25 +233,28 @@ export const PrivacyModal: React.FC<PrivacyModalProps> = ({
                     sound.toggle();
                     setExpandedSection(expandedSection === 'session' ? null : 'session');
                   }}
-                  className={`group relative rounded-2xl border p-3.5 transition-all text-left cursor-pointer ${
+                  className={`group relative rounded-2xl border p-4 transition-all text-left cursor-pointer ${
                     expandedSection === 'session'
                       ? 'border-zinc-950 bg-zinc-950 text-white shadow-md'
-                      : 'border-zinc-200/80 bg-zinc-50/70 hover:border-zinc-300 hover:bg-white text-zinc-900 shadow-2xs'
+                      : 'border-zinc-200/90 bg-white hover:border-zinc-300 hover:bg-zinc-50/80 text-zinc-900 shadow-2xs'
                   }`}
                 >
-                  <div className="flex items-center justify-between mb-1">
-                    <span className={`text-[10px] font-mono uppercase font-bold ${expandedSection === 'session' ? 'text-zinc-300' : 'text-zinc-500'}`}>
-                      SessionStorage
-                    </span>
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-1.5">
+                      <Layers className={`h-3.5 w-3.5 ${expandedSection === 'session' ? 'text-zinc-300' : 'text-zinc-500'}`} />
+                      <span className={`text-[10px] font-mono uppercase font-bold ${expandedSection === 'session' ? 'text-zinc-300' : 'text-zinc-600'}`}>
+                        Session
+                      </span>
+                    </div>
                     {storageInfo.sessionStorageKeys > 0 && (
                       expandedSection === 'session' ? <ChevronUp className="h-3 w-3 text-zinc-400" /> : <ChevronDown className="h-3 w-3 text-zinc-400" />
                     )}
                   </div>
-                  <div className="font-mono text-xl font-extrabold">
+                  <div className="font-mono text-2xl font-extrabold tracking-tight">
                     {storageInfo.sessionStorageKeys}
                   </div>
-                  <div className={`text-[10px] font-mono mt-0.5 ${expandedSection === 'session' ? 'text-zinc-300' : 'text-zinc-400'}`}>
-                    Session keys
+                  <div className={`text-[10px] font-mono mt-1 ${expandedSection === 'session' ? 'text-zinc-300' : 'text-zinc-400'}`}>
+                    {storageInfo.sessionStorageKeys === 1 ? '1 active key' : `${storageInfo.sessionStorageKeys} active keys`}
                   </div>
                 </button>
 
@@ -256,25 +265,28 @@ export const PrivacyModal: React.FC<PrivacyModalProps> = ({
                     sound.toggle();
                     setExpandedSection(expandedSection === 'cache' ? null : 'cache');
                   }}
-                  className={`group relative rounded-2xl border p-3.5 transition-all text-left cursor-pointer ${
+                  className={`group relative rounded-2xl border p-4 transition-all text-left cursor-pointer ${
                     expandedSection === 'cache'
                       ? 'border-zinc-950 bg-zinc-950 text-white shadow-md'
-                      : 'border-zinc-200/80 bg-zinc-50/70 hover:border-zinc-300 hover:bg-white text-zinc-900 shadow-2xs'
+                      : 'border-zinc-200/90 bg-white hover:border-zinc-300 hover:bg-zinc-50/80 text-zinc-900 shadow-2xs'
                   }`}
                 >
-                  <div className="flex items-center justify-between mb-1">
-                    <span className={`text-[10px] font-mono uppercase font-bold ${expandedSection === 'cache' ? 'text-zinc-300' : 'text-zinc-500'}`}>
-                      Cache Storage
-                    </span>
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-1.5">
+                      <Archive className={`h-3.5 w-3.5 ${expandedSection === 'cache' ? 'text-zinc-300' : 'text-zinc-500'}`} />
+                      <span className={`text-[10px] font-mono uppercase font-bold ${expandedSection === 'cache' ? 'text-zinc-300' : 'text-zinc-600'}`}>
+                        Cache
+                      </span>
+                    </div>
                     {storageInfo.cacheStorageEntries > 0 && (
                       expandedSection === 'cache' ? <ChevronUp className="h-3 w-3 text-zinc-400" /> : <ChevronDown className="h-3 w-3 text-zinc-400" />
                     )}
                   </div>
-                  <div className="font-mono text-xl font-extrabold">
+                  <div className="font-mono text-2xl font-extrabold tracking-tight">
                     {storageInfo.cacheStorageEntries}
                   </div>
-                  <div className={`text-[10px] font-mono mt-0.5 ${expandedSection === 'cache' ? 'text-zinc-300' : 'text-zinc-400'}`}>
-                    Cache stores
+                  <div className={`text-[10px] font-mono mt-1 ${expandedSection === 'cache' ? 'text-zinc-300' : 'text-zinc-400'}`}>
+                    {storageInfo.cacheStorageEntries === 1 ? '1 cache store' : `${storageInfo.cacheStorageEntries} cache stores`}
                   </div>
                 </button>
 
@@ -285,25 +297,28 @@ export const PrivacyModal: React.FC<PrivacyModalProps> = ({
                     sound.toggle();
                     setExpandedSection(expandedSection === 'indexeddb' ? null : 'indexeddb');
                   }}
-                  className={`group relative rounded-2xl border p-3.5 transition-all text-left cursor-pointer ${
+                  className={`group relative rounded-2xl border p-4 transition-all text-left cursor-pointer ${
                     expandedSection === 'indexeddb'
                       ? 'border-zinc-950 bg-zinc-950 text-white shadow-md'
-                      : 'border-zinc-200/80 bg-zinc-50/70 hover:border-zinc-300 hover:bg-white text-zinc-900 shadow-2xs'
+                      : 'border-zinc-200/90 bg-white hover:border-zinc-300 hover:bg-zinc-50/80 text-zinc-900 shadow-2xs'
                   }`}
                 >
-                  <div className="flex items-center justify-between mb-1">
-                    <span className={`text-[10px] font-mono uppercase font-bold ${expandedSection === 'indexeddb' ? 'text-zinc-300' : 'text-zinc-500'}`}>
-                      IndexedDB
-                    </span>
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center gap-1.5">
+                      <Database className={`h-3.5 w-3.5 ${expandedSection === 'indexeddb' ? 'text-zinc-300' : 'text-zinc-500'}`} />
+                      <span className={`text-[10px] font-mono uppercase font-bold ${expandedSection === 'indexeddb' ? 'text-zinc-300' : 'text-zinc-600'}`}>
+                        IndexedDB
+                      </span>
+                    </div>
                     {storageInfo.indexedDbDatabases > 0 && (
                       expandedSection === 'indexeddb' ? <ChevronUp className="h-3 w-3 text-zinc-400" /> : <ChevronDown className="h-3 w-3 text-zinc-400" />
                     )}
                   </div>
-                  <div className="font-mono text-xl font-extrabold">
+                  <div className="font-mono text-2xl font-extrabold tracking-tight">
                     {storageInfo.indexedDbDatabases}
                   </div>
-                  <div className={`text-[10px] font-mono mt-0.5 ${expandedSection === 'indexeddb' ? 'text-zinc-300' : 'text-zinc-400'}`}>
-                    Databases
+                  <div className={`text-[10px] font-mono mt-1 ${expandedSection === 'indexeddb' ? 'text-zinc-300' : 'text-zinc-400'}`}>
+                    {storageInfo.indexedDbDatabases === 1 ? '1 database' : `${storageInfo.indexedDbDatabases} databases`}
                   </div>
                 </button>
               </div>
@@ -326,7 +341,7 @@ export const PrivacyModal: React.FC<PrivacyModalProps> = ({
                   </span>
                   <button
                     onClick={() => setExpandedSection(null)}
-                    className="text-[11px] text-zinc-400 hover:text-zinc-700"
+                    className="text-[11px] text-zinc-400 hover:text-zinc-700 cursor-pointer"
                   >
                     Close inspection
                   </button>
