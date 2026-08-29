@@ -47,8 +47,8 @@ export const Header: React.FC<HeaderProps> = ({
             <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-zinc-100 border border-zinc-200/80 p-1 shadow-2xs transition-transform duration-200 group-hover:scale-105">
               <img src="/logo.png" alt="BuiltWhileBroke" className="h-full w-full object-contain" />
             </div>
-            <span className="font-sans text-sm font-extrabold tracking-tight text-zinc-900">
-              BuiltWhile<span className="text-zinc-500">Broke</span>
+            <span className="font-sans text-sm font-extrabold tracking-tight text-zinc-950">
+              BuiltWhile<span className="text-zinc-500 font-normal">Broke</span>
             </span>
           </Link>
 
@@ -60,8 +60,8 @@ export const Header: React.FC<HeaderProps> = ({
               className={({ isActive }) =>
                 `rounded-lg px-2.5 py-1.5 transition-colors ${
                   isActive
-                    ? 'bg-zinc-100 text-zinc-900 font-bold'
-                    : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100/60'
+                    ? 'bg-zinc-100 text-zinc-950 font-bold shadow-2xs'
+                    : 'text-zinc-500 hover:text-zinc-950 hover:bg-zinc-100/60'
                 }`
               }
             >
@@ -74,8 +74,8 @@ export const Header: React.FC<HeaderProps> = ({
               className={({ isActive }) =>
                 `rounded-lg px-2.5 py-1.5 transition-colors ${
                   isActive
-                    ? 'bg-zinc-100 text-zinc-900 font-bold'
-                    : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100/60'
+                    ? 'bg-zinc-100 text-zinc-950 font-bold shadow-2xs'
+                    : 'text-zinc-500 hover:text-zinc-950 hover:bg-zinc-100/60'
                 }`
               }
             >
@@ -88,8 +88,8 @@ export const Header: React.FC<HeaderProps> = ({
               className={({ isActive }) =>
                 `rounded-lg px-2.5 py-1.5 transition-colors ${
                   isActive
-                    ? 'bg-zinc-100 text-zinc-900 font-bold'
-                    : 'text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100/60'
+                    ? 'bg-zinc-100 text-zinc-950 font-bold shadow-2xs'
+                    : 'text-zinc-500 hover:text-zinc-950 hover:bg-zinc-100/60'
                 }`
               }
             >
@@ -123,7 +123,7 @@ export const Header: React.FC<HeaderProps> = ({
               sound.click();
               onOpenSearch();
             }}
-            className="flex items-center gap-2 rounded-xl border border-zinc-200 bg-zinc-50/80 px-3 py-1.5 text-xs text-zinc-600 transition-colors hover:border-zinc-300 hover:bg-white hover:text-zinc-900 shadow-sm"
+            className="flex items-center gap-2 rounded-xl border border-zinc-200/90 bg-zinc-50/90 px-3 py-1.5 text-xs text-zinc-600 transition-all hover:border-zinc-300 hover:bg-white hover:text-zinc-950 shadow-2xs"
           >
             <Search className="h-3.5 w-3.5 text-zinc-400" />
             <span className="hidden sm:inline">Search</span>
@@ -141,7 +141,7 @@ export const Header: React.FC<HeaderProps> = ({
               sound.click();
               onOpenLicenseAudit();
             }}
-            className="flex items-center gap-1.5 rounded-xl border border-zinc-200 bg-zinc-50/80 px-2.5 py-1.5 text-xs font-semibold text-zinc-700 transition-colors hover:border-zinc-300 hover:bg-white hover:text-zinc-900 shadow-sm"
+            className="flex items-center gap-1.5 rounded-xl border border-zinc-200/90 bg-zinc-50/90 px-2.5 py-1.5 text-xs font-semibold text-zinc-700 transition-all hover:border-zinc-300 hover:bg-white hover:text-zinc-950 shadow-2xs"
             title="Commercial Licensing Audit"
           >
             <Shield className="h-3.5 w-3.5 text-zinc-900" />

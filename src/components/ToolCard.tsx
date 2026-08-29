@@ -19,18 +19,7 @@ import {
   PenTool,
   Share2,
   Layers,
-  FileCheck,
-  Shield,
-  Globe,
-  SlidersHorizontal,
-  Maximize2,
-  Box,
-  Palette,
-  Video,
-  Code2,
-  Cpu,
-  Terminal,
-  Activity,
+  Zap,
 } from 'lucide-react';
 import { GithubIcon } from './Icons';
 import { ToolItem } from '../types/tool';
@@ -78,37 +67,14 @@ const renderToolIcon = (iconName: string, className: string = 'h-5 w-5') => {
       return <Share2 className={className} />;
     case 'Layers':
       return <Layers className={className} />;
-    case 'FileCheck':
-      return <FileCheck className={className} />;
-    case 'Shield':
-      return <Shield className={className} />;
-    case 'Globe':
-      return <Globe className={className} />;
-    case 'SlidersHorizontal':
-      return <SlidersHorizontal className={className} />;
-    case 'Maximize2':
-      return <Maximize2 className={className} />;
-    case 'Box':
-      return <Box className={className} />;
-    case 'Palette':
-      return <Palette className={className} />;
-    case 'Video':
-      return <Video className={className} />;
-    case 'Regex':
-    case 'Code2':
-      return <Code2 className={className} />;
-    case 'Terminal':
-      return <Terminal className={className} />;
-    case 'Cpu':
-      return <Cpu className={className} />;
     default:
-      return <Activity className={className} />;
+      return <Wrench className={className} />;
   }
 };
 
 export const ToolCard: React.FC<ToolCardProps> = ({
   tool,
-  usageCount,
+  usageCount = 0,
   onLaunch,
   onViewAudit,
 }) => {
@@ -131,32 +97,32 @@ export const ToolCard: React.FC<ToolCardProps> = ({
         sound.launch();
         onLaunch(tool);
       }}
-      className="group relative flex flex-col justify-between rounded-2xl p-5 bg-white border border-zinc-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.03),0_4px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_16px_36px_rgba(0,0,0,0.06),0_2px_8px_rgba(0,0,0,0.04)] hover:border-zinc-400/80 hover:-translate-y-1 transition-all duration-300 cursor-pointer overflow-hidden"
+      className="group relative flex flex-col justify-between rounded-2xl p-5 bg-white border border-zinc-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.02),0_4px_16px_rgba(0,0,0,0.02)] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.07),0_0_20px_rgba(0,0,0,0.02)] hover:border-zinc-300/90 hover:-translate-y-1 transition-all duration-300 ease-out cursor-pointer overflow-hidden"
     >
-      {/* 1. Subtle Caustic Glow on Hover */}
+      {/* 1. Cursor-Following Specular Spotlight Glow */}
       <div
         className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"
         style={{
           background:
-            'radial-gradient(280px circle at var(--card-mouse-x, 50%) var(--card-mouse-y, 50%), rgba(0, 0, 0, 0.025), transparent 70%)',
+            'radial-gradient(320px circle at var(--card-mouse-x, 50%) var(--card-mouse-y, 50%), rgba(24, 24, 27, 0.035), transparent 70%)',
         }}
       />
 
-      {/* 2. Top Specular Glass Accent Line */}
+      {/* 2. Top Specular Glass Refraction Rim */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-zinc-900/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-      {/* Main Content Area */}
+      {/* Main Content */}
       <div className="relative z-10">
-        {/* Header: Tool Icon, Names & Star / Usage Rating */}
+        {/* Header: Icon, Tool Title & Ratings */}
         <div className="flex items-start justify-between gap-2">
           <div className="flex items-center gap-3 min-w-0">
-            {/* Visual Icon Badge */}
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-zinc-100 border border-zinc-200/80 text-zinc-900 shadow-2xs transition-transform duration-200 group-hover:scale-105 group-hover:bg-zinc-900 group-hover:text-white group-hover:border-zinc-900">
-              {renderToolIcon(tool.icon, 'h-5 w-5')}
+            {/* Visual Icon Box */}
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-zinc-100/90 border border-zinc-200/80 text-zinc-900 shadow-2xs transition-all duration-300 group-hover:scale-105 group-hover:bg-zinc-950 group-hover:text-white group-hover:border-zinc-950 group-hover:shadow-md">
+              {renderToolIcon(tool.icon, 'h-5 w-5 transition-transform duration-300 group-hover:scale-105')}
             </div>
 
             <div className="min-w-0">
-              <h3 className="font-sans text-sm font-bold text-zinc-950 tracking-tight group-hover:text-zinc-900 transition-colors truncate">
+              <h3 className="font-sans text-sm font-bold text-zinc-950 tracking-tight transition-colors truncate">
                 {tool.name}
               </h3>
               <p className="text-[11px] text-zinc-400 font-mono font-medium truncate">
@@ -167,33 +133,33 @@ export const ToolCard: React.FC<ToolCardProps> = ({
 
           {/* Badges: Usage Count & Star Rating */}
           <div className="flex shrink-0 items-center gap-1.5">
-            {usageCount !== undefined && usageCount > 0 && (
+            {usageCount > 0 && (
               <div
-                className="flex items-center gap-1 rounded-full bg-zinc-100 border border-zinc-200/80 px-2 py-0.5 text-[10px] font-mono font-bold text-zinc-800 shadow-2xs animate-in fade-in"
+                className="flex items-center gap-1 rounded-full bg-zinc-100/90 border border-zinc-200/80 px-2 py-0.5 text-[10px] font-mono font-bold text-zinc-800 shadow-2xs"
                 title={`Used ${usageCount} time${usageCount > 1 ? 's' : ''}`}
               >
-                <span>⚡</span>
-                <span>{usageCount} {usageCount === 1 ? 'use' : 'uses'}</span>
+                <Zap className="h-2.5 w-2.5 fill-zinc-800 text-zinc-800" />
+                <span>{usageCount}</span>
               </div>
             )}
-            <div className="flex shrink-0 items-center gap-1 rounded-full bg-amber-50/90 border border-amber-200/80 px-2.5 py-0.5 text-[11px] font-mono font-bold text-amber-800 shadow-sm">
-              <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-500" />
+            <div className="flex shrink-0 items-center gap-1 rounded-full bg-amber-50/80 border border-amber-200/70 px-2.5 py-0.5 text-[11px] font-mono font-bold text-amber-800 shadow-2xs">
+              <Star className="h-3 w-3 fill-amber-400 text-amber-500" />
               <span>{tool.stars}</span>
             </div>
           </div>
         </div>
 
-        {/* Description (Fixed line clamp & uniform height) */}
+        {/* Description */}
         <p className="mt-3.5 text-xs leading-relaxed text-zinc-600 line-clamp-2 min-h-[2.5rem] font-normal">
           {tool.description}
         </p>
 
-        {/* Tech Stack Chips */}
-        <div className="mt-3 flex flex-wrap items-center gap-1.5">
+        {/* Tech Stack Pills */}
+        <div className="mt-3.5 flex flex-wrap items-center gap-1.5">
           {tool.techStack.slice(0, 3).map((tech) => (
             <span
               key={tech}
-              className="rounded-lg bg-zinc-50 border border-zinc-200/80 px-2 py-0.5 text-[10px] font-mono font-medium text-zinc-600 group-hover:border-zinc-300 transition-colors"
+              className="rounded-lg bg-zinc-50/90 border border-zinc-200/70 px-2 py-0.5 text-[10px] font-mono font-medium text-zinc-600 transition-colors group-hover:border-zinc-300"
             >
               {tech}
             </span>
@@ -207,14 +173,14 @@ export const ToolCard: React.FC<ToolCardProps> = ({
       </div>
 
       {/* Footer: License, Offline Badge, GitHub & Open Launch Action */}
-      <div className="relative z-10 mt-5 pt-3.5 border-t border-zinc-100 flex items-center justify-between">
+      <div className="relative z-10 mt-5 pt-3.5 border-t border-zinc-100/90 flex items-center justify-between">
         <button
           onClick={(e) => {
             e.stopPropagation();
             sound.click();
             onViewAudit(tool);
           }}
-          className="flex items-center gap-1.5 rounded-lg bg-zinc-50 border border-zinc-200/80 px-2 py-1 text-[10px] font-mono font-bold text-zinc-700 hover:bg-zinc-100 hover:text-zinc-950 transition-colors shadow-2xs"
+          className="flex items-center gap-1.5 rounded-lg bg-zinc-50/90 border border-zinc-200/80 px-2 py-1 text-[10px] font-mono font-bold text-zinc-700 hover:bg-zinc-100 hover:text-zinc-950 transition-all shadow-2xs active:scale-95"
           title="View commercial license audit"
         >
           <span
@@ -229,7 +195,7 @@ export const ToolCard: React.FC<ToolCardProps> = ({
           {tool.offlineCapable && (
             <span
               title="100% Offline Capable"
-              className="flex items-center gap-1 rounded-md bg-emerald-50 border border-emerald-200/70 px-1.5 py-0.5 text-[10px] font-mono font-semibold text-emerald-700"
+              className="flex items-center gap-1 rounded-md bg-emerald-50/80 border border-emerald-200/60 px-1.5 py-0.5 text-[10px] font-mono font-semibold text-emerald-700"
             >
               <WifiOff className="h-3 w-3" />
               <span className="hidden sm:inline">Offline</span>
@@ -244,15 +210,15 @@ export const ToolCard: React.FC<ToolCardProps> = ({
               e.stopPropagation();
               sound.click();
             }}
-            className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-900 hover:bg-zinc-100 transition-colors"
+            className="p-1.5 rounded-lg text-zinc-400 hover:text-zinc-900 hover:bg-zinc-100/80 transition-all"
             title="GitHub Repository"
           >
             <GithubIcon className="h-3.5 w-3.5" />
           </a>
 
-          <div className="flex items-center gap-1 rounded-xl bg-zinc-100 px-2.5 py-1 text-[11px] font-bold text-zinc-900 border border-zinc-200/80 group-hover:bg-zinc-900 group-hover:text-white group-hover:border-zinc-900 shadow-2xs transition-all">
+          <div className="flex items-center gap-1 rounded-xl bg-zinc-100/90 px-2.5 py-1 text-[11px] font-bold text-zinc-900 border border-zinc-200/80 group-hover:bg-zinc-950 group-hover:text-white group-hover:border-zinc-950 shadow-2xs transition-all duration-200">
             <span>Open</span>
-            <ArrowUpRight className="h-3 w-3 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+            <ArrowUpRight className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </div>
         </div>
       </div>
