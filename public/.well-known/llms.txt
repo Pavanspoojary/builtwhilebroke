@@ -1,0 +1,3 @@
+# BuiltWhileBroke (BWB) — Well-Known AI Agent Manifest
+
+See https://builtwhilebroke.com/llms.txt and https://builtwhilebroke.com/llms-full.txt for the complete documentation.

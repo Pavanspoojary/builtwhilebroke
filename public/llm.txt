@@ -17,7 +17,7 @@
 
 ### 1. Developer Utilities & Compilers (`/tools?category=dev`)
 - **LibreSpeed** (`/tools/librespeed`): Lightweight HTML5 network speed test & latency probe.
-- **node-cron** (`/tools/node-cron`): Task scheduler & 5/6-field cron expression parser.
+- **node-cron** (`/tools/node-cron`): Task scheduler & 5/6-field cron syntax expression parser.
 - **SQLime** (`/tools/sqlime`): SQLite WebAssembly playground & in-browser query debugger.
 - **PGlite** (`/tools/pglite`): Full PostgreSQL database engine compiled to WebAssembly (WASM).
 - **Orama Search** (`/tools/orama`): Instant vector, hybrid, and full-text search engine in browser memory.
