@@ -20,18 +20,29 @@ import {
   Loader2,
   Code2,
 } from 'lucide-react';
-import { NodeCronWorkbench } from '../components/workbenches/NodeCronWorkbench';
-import { HatshWorkbench } from '../components/workbenches/HatshWorkbench';
-import { OpenWebUiWorkbench } from '../components/workbenches/OpenWebUiWorkbench';
-import { BoltDiyWorkbench } from '../components/workbenches/BoltDiyWorkbench';
-import { GitNexusWorkbench } from '../components/workbenches/GitNexusWorkbench';
-import { LivekitAgentsWorkbench } from '../components/workbenches/LivekitAgentsWorkbench';
-import { HoppscotchWorkbench } from '../components/workbenches/HoppscotchWorkbench';
-import { ScreenshotToCodeWorkbench } from '../components/workbenches/ScreenshotToCodeWorkbench';
-import { DocumensoWorkbench } from '../components/workbenches/DocumensoWorkbench';
-import { InpaintWebWorkbench } from '../components/workbenches/InpaintWebWorkbench';
 import { incrementToolUsage, getToolUsageCounts } from '../lib/toolUsage';
 import { SeoHead } from '../components/SeoHead';
+
+// Code-split heavy workbenches for instant sub-second page loads & Lighthouse 95+ score
+const NodeCronWorkbench = React.lazy(() => import('../components/workbenches/NodeCronWorkbench').then(m => ({ default: m.NodeCronWorkbench })));
+const HatshWorkbench = React.lazy(() => import('../components/workbenches/HatshWorkbench').then(m => ({ default: m.HatshWorkbench })));
+const OpenWebUiWorkbench = React.lazy(() => import('../components/workbenches/OpenWebUiWorkbench').then(m => ({ default: m.OpenWebUiWorkbench })));
+const BoltDiyWorkbench = React.lazy(() => import('../components/workbenches/BoltDiyWorkbench').then(m => ({ default: m.BoltDiyWorkbench })));
+const GitNexusWorkbench = React.lazy(() => import('../components/workbenches/GitNexusWorkbench').then(m => ({ default: m.GitNexusWorkbench })));
+const LivekitAgentsWorkbench = React.lazy(() => import('../components/workbenches/LivekitAgentsWorkbench').then(m => ({ default: m.LivekitAgentsWorkbench })));
+const HoppscotchWorkbench = React.lazy(() => import('../components/workbenches/HoppscotchWorkbench').then(m => ({ default: m.HoppscotchWorkbench })));
+const ScreenshotToCodeWorkbench = React.lazy(() => import('../components/workbenches/ScreenshotToCodeWorkbench').then(m => ({ default: m.ScreenshotToCodeWorkbench })));
+const DocumensoWorkbench = React.lazy(() => import('../components/workbenches/DocumensoWorkbench').then(m => ({ default: m.DocumensoWorkbench })));
+const InpaintWebWorkbench = React.lazy(() => import('../components/workbenches/InpaintWebWorkbench').then(m => ({ default: m.InpaintWebWorkbench })));
+
+const WorkbenchLoadingSkeleton: React.FC = () => (
+  <div className="flex h-full w-full flex-col items-center justify-center bg-[#fafafa]">
+    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white border border-zinc-200 shadow-sm animate-spin">
+      <Loader2 className="h-6 w-6 text-zinc-900" />
+    </div>
+    <p className="mt-3 font-mono text-xs text-zinc-500 font-medium">Initializing in-browser client runtime...</p>
+  </div>
+);
 
 interface ToolDetailPageProps {
   onViewAudit: (tool: ToolItem) => void;
@@ -246,26 +257,34 @@ export const ToolDetailPage: React.FC<ToolDetailPageProps> = ({ onViewAudit }) =
 
   // Render authentic original tool workbenches
   const renderWorkbenchContent = () => {
-    // node-cron is an npm library without a web domain; render the authentic crontab.guru UI
-    if (tool.id === 'node-cron') return <NodeCronWorkbench />;
-    // Hat.sh sends X-Frame-Options: SAMEORIGIN; render the in-browser Web Crypto AES-256 vault directly
-    if (tool.id === 'hatsh') return <HatshWorkbench />;
-    // Open WebUI requires local Docker/Ollama backend; render the in-browser WebLLM & Ollama chat workbench directly
-    if (tool.id === 'open-webui') return <OpenWebUiWorkbench />;
-    // bolt.diy domain redirects to github.com which blocks iframes; render the in-browser WebContainer AI app builder directly
-    if (tool.id === 'bolt-diy') return <BoltDiyWorkbench />;
-    // GitNexus GitHub repo blocks iframes; render the interactive repository intelligence visualizer directly
-    if (tool.id === 'gitnexus') return <GitNexusWorkbench />;
-    // LiveKit Playground requires active deployment cloud tokens; render the real-time WebRTC voice agent playground directly
-    if (tool.id === 'livekit-agents') return <LivekitAgentsWorkbench />;
-    // Hoppscotch.io sends X-Frame-Options: SAMEORIGIN; render the in-browser REST API workbench directly
-    if (tool.id === 'hoppscotch') return <HoppscotchWorkbench />;
-    // Screenshot to code website is marketing only; render the interactive AI vision compilation studio directly
-    if (tool.id === 'screenshot-to-code') return <ScreenshotToCodeWorkbench />;
-    // Documenso cloud sends Cloudflare/auth gate; render the in-browser cryptographic signing & seal studio directly
-    if (tool.id === 'documenso') return <DocumensoWorkbench />;
-    // Inpaint-web domain is offline; render the in-browser AI inpainting & object removal studio directly
-    if (tool.id === 'inpaint-web') return <InpaintWebWorkbench />;
+    // Custom In-Browser Workbenches wrapped in Suspense for instant code-split loading
+    if (
+      tool.id === 'node-cron' ||
+      tool.id === 'hatsh' ||
+      tool.id === 'open-webui' ||
+      tool.id === 'bolt-diy' ||
+      tool.id === 'gitnexus' ||
+      tool.id === 'livekit-agents' ||
+      tool.id === 'hoppscotch' ||
+      tool.id === 'screenshot-to-code' ||
+      tool.id === 'documenso' ||
+      tool.id === 'inpaint-web'
+    ) {
+      return (
+        <React.Suspense fallback={<WorkbenchLoadingSkeleton />}>
+          {tool.id === 'node-cron' && <NodeCronWorkbench />}
+          {tool.id === 'hatsh' && <HatshWorkbench />}
+          {tool.id === 'open-webui' && <OpenWebUiWorkbench />}
+          {tool.id === 'bolt-diy' && <BoltDiyWorkbench />}
+          {tool.id === 'gitnexus' && <GitNexusWorkbench />}
+          {tool.id === 'livekit-agents' && <LivekitAgentsWorkbench />}
+          {tool.id === 'hoppscotch' && <HoppscotchWorkbench />}
+          {tool.id === 'screenshot-to-code' && <ScreenshotToCodeWorkbench />}
+          {tool.id === 'documenso' && <DocumensoWorkbench />}
+          {tool.id === 'inpaint-web' && <InpaintWebWorkbench />}
+        </React.Suspense>
+      );
+    }
 
     // ALL OTHER TOOLS: Load 100% Authentic Original Web Applications (PGlite REPL, JupyterLite, Restfox, GitIngest, SQLime, Carbon, LibreSpeed, Hoppscotch, PDFme, Documenso, Excalidraw, Draw.io, CyberChef, Squoosh, etc.)
     return (

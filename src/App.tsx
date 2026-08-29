@@ -1,17 +1,25 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
-import { HomePage } from './pages/HomePage';
-import { ToolsPage } from './pages/ToolsPage';
-import { ToolDetailPage } from './pages/ToolDetailPage';
-import { LegalPage } from './pages/LegalPage';
 import { LicenseAuditModal } from './components/LicenseAuditModal';
 import { CommandPalette } from './components/CommandPalette';
 import { PrivacyModal } from './components/PrivacyModal';
 import { TOOLS } from './data/toolsData';
 import { ToolItem } from './types/tool';
 import { SpotlightGrid } from './components/SpotlightGrid';
+
+// Code-split route level pages
+const HomePage = React.lazy(() => import('./pages/HomePage').then(m => ({ default: m.HomePage })));
+const ToolsPage = React.lazy(() => import('./pages/ToolsPage').then(m => ({ default: m.ToolsPage })));
+const ToolDetailPage = React.lazy(() => import('./pages/ToolDetailPage').then(m => ({ default: m.ToolDetailPage })));
+const LegalPage = React.lazy(() => import('./pages/LegalPage').then(m => ({ default: m.LegalPage })));
+
+const PageLoadingFallback: React.FC = () => (
+  <div className="flex min-h-[60vh] w-full items-center justify-center">
+    <div className="h-8 w-8 animate-spin rounded-full border-2 border-zinc-200 border-t-zinc-900" />
+  </div>
+);
 
 function AppContent() {
   const navigate = useNavigate();
@@ -99,28 +107,30 @@ function AppContent() {
 
       {/* Main Routed Content */}
       <div className="relative z-10 flex-1">
-        <Routes>
-          <Route
-            path="/"
-            element={<HomePage onViewAudit={handleOpenAuditForTool} />}
-          />
-          <Route
-            path="/tools"
-            element={<ToolsPage onViewAudit={handleOpenAuditForTool} />}
-          />
-          <Route
-            path="/tools/:toolId"
-            element={<ToolDetailPage onViewAudit={handleOpenAuditForTool} />}
-          />
-          <Route
-            path="/legal"
-            element={<LegalPage />}
-          />
-          <Route
-            path="*"
-            element={<ToolsPage onViewAudit={handleOpenAuditForTool} />}
-          />
-        </Routes>
+        <React.Suspense fallback={<PageLoadingFallback />}>
+          <Routes>
+            <Route
+              path="/"
+              element={<HomePage onViewAudit={handleOpenAuditForTool} />}
+            />
+            <Route
+              path="/tools"
+              element={<ToolsPage onViewAudit={handleOpenAuditForTool} />}
+            />
+            <Route
+              path="/tools/:toolId"
+              element={<ToolDetailPage onViewAudit={handleOpenAuditForTool} />}
+            />
+            <Route
+              path="/legal"
+              element={<LegalPage />}
+            />
+            <Route
+              path="*"
+              element={<ToolsPage onViewAudit={handleOpenAuditForTool} />}
+            />
+          </Routes>
+        </React.Suspense>
       </div>
 
       {/* Footer: only on Home & Tools directory pages */}
