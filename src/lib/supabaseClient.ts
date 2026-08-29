@@ -1,16 +1,19 @@
 import { createClient } from '@supabase/supabase-js';
 import { REQUESTED_TOOLS, RequestedToolItem } from '../data/requestedToolsData';
 
-// Supabase project URL and anon public key
+// Supabase project URL and publishable public key
 const SUPABASE_URL =
-  import.meta.env.VITE_SUPABASE_URL || 'https://giyzluujybzqvyxwxfox.supabase.co';
+  import.meta.env.VITE_SUPABASE_URL ||
+  import.meta.env.NEXT_PUBLIC_SUPABASE_URL ||
+  'https://giyzluujybzqvyxwxfox.supabase.co';
 
 const SUPABASE_ANON_KEY =
   import.meta.env.VITE_SUPABASE_ANON_KEY ||
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdpeXpsdXVqeWJ6cXZ5eHd4Zm94Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjUwMDAwMDAsImV4cCI6MjA0MDUwMDAwMH0.placeholder';
+  import.meta.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+  'sb_publishable_7h-rq_hVl5FId2zrQfhUmQ_HzUy9Dxi';
 
 export const isSupabaseConfigured = Boolean(
-  SUPABASE_URL && !SUPABASE_URL.includes('placeholder')
+  SUPABASE_URL && SUPABASE_ANON_KEY
 );
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {

@@ -4,66 +4,25 @@ import { supabase } from './supabaseClient';
 const USAGE_STORAGE_KEY = 'bwb_tool_usage_counts';
 const USAGE_EVENT_NAME = 'bwb_tool_usage_updated';
 
-// Authentic baseline global usage metrics calculated across active community traffic & repository stars
-export const GLOBAL_TOOL_BASELINE_USES: Record<string, number> = {
-  'open-webui': 3820,
-  'screenshot-to-code': 3450,
-  'cyberchef': 2890,
-  'bolt-diy': 2640,
-  'excalidraw': 2410,
-  'hoppscotch': 2180,
-  'pglite': 1950,
-  'hatsh': 1820,
-  'documenso': 1670,
-  'drawio': 1540,
-  'inpaint-web': 1420,
-  'gitnexus': 1310,
-  'gitingest': 1240,
-  'livekit-agents': 1180,
-  'sqlime': 1050,
-  'jupyterlite': 980,
-  'it-tools': 920,
-  'svgomg': 870,
-  'squoosh': 830,
-  'librespeed': 790,
-  'restfox': 750,
-  'node-cron': 710,
-  'mermaid-live': 680,
-  'regex101': 650,
-  'json-crack': 620,
-  'carbon': 590,
-  'orama': 560,
-  'pairdrop': 530,
-  'qrcode': 490,
-  'plantuml': 460,
-  'jwt-io': 430,
-  'dns-lookup': 410,
-  'whois': 380,
-  'ffmpeg-wasm': 350,
-};
-
-// In-memory cache initialized with baseline + local increments
-let cachedCounts: Record<string, number> = { ...GLOBAL_TOOL_BASELINE_USES };
+// In-memory cache for real usage counts (starts at 0, no fake data)
+let cachedCounts: Record<string, number> = {};
 
 try {
   const raw = localStorage.getItem(USAGE_STORAGE_KEY);
   if (raw) {
-    const localSaved = JSON.parse(raw);
-    for (const [id, count] of Object.entries(localSaved)) {
-      cachedCounts[id] = Math.max(cachedCounts[id] || 0, Number(count) || 0);
-    }
+    cachedCounts = JSON.parse(raw);
   }
 } catch {}
 
 /**
- * Returns a map of tool ID to total global usage count
+ * Returns a map of tool ID to real usage count
  */
 export const getToolUsageCounts = (): Record<string, number> => {
   return { ...cachedCounts };
 };
 
 /**
- * Formats usage numbers for display (e.g. 3.8k, 1.2k, 950)
+ * Formats usage numbers for display (e.g. 1.2k, 145, 0)
  */
 export const formatUsageCount = (count: number = 0): string => {
   if (count >= 1000000) {
@@ -72,11 +31,11 @@ export const formatUsageCount = (count: number = 0): string => {
   if (count >= 1000) {
     return (count / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
   }
-  return count.toLocaleString();
+  return count.toString();
 };
 
 /**
- * Fetches latest global tool usage stats from Supabase
+ * Fetches latest real global tool usage stats from Supabase
  */
 export const fetchGlobalToolUsageStats = async (): Promise<Record<string, number>> => {
   try {
@@ -88,9 +47,7 @@ export const fetchGlobalToolUsageStats = async (): Promise<Record<string, number
       const merged: Record<string, number> = { ...cachedCounts };
       for (const row of data) {
         if (row.tool_id) {
-          const remoteCount = Number(row.use_count) || 0;
-          const baseline = GLOBAL_TOOL_BASELINE_USES[row.tool_id] || 0;
-          merged[row.tool_id] = Math.max(merged[row.tool_id] || 0, baseline + remoteCount);
+          merged[row.tool_id] = Math.max(merged[row.tool_id] || 0, Number(row.use_count) || 0);
         }
       }
       cachedCounts = merged;
@@ -101,19 +58,19 @@ export const fetchGlobalToolUsageStats = async (): Promise<Record<string, number
       return merged;
     }
   } catch (err) {
-    console.debug('Global tool stats fetch skipped / offline:', err);
+    console.debug('Supabase global tool stats fetch:', err);
   }
   return cachedCounts;
 };
 
 /**
- * Increments usage count locally and syncs atomically with Supabase global database
+ * Increments real usage count and syncs with Supabase global database
  */
 export const incrementToolUsage = async (toolId: string): Promise<number> => {
   if (!toolId) return 0;
 
-  // 1. Immediate optimistic local update
-  const newCount = (cachedCounts[toolId] || GLOBAL_TOOL_BASELINE_USES[toolId] || 0) + 1;
+  // 1. Immediate real-time optimistic update
+  const newCount = (cachedCounts[toolId] || 0) + 1;
   cachedCounts[toolId] = newCount;
 
   try {
@@ -124,7 +81,7 @@ export const incrementToolUsage = async (toolId: string): Promise<number> => {
     new CustomEvent(USAGE_EVENT_NAME, { detail: { toolId, count: newCount } })
   );
 
-  // 2. Asynchronous background sync to Supabase
+  // 2. Background sync to Supabase global_tool_stats
   try {
     const { data: rpcTotal, error: rpcError } = await supabase.rpc(
       'increment_global_tool_usage',
@@ -132,48 +89,46 @@ export const incrementToolUsage = async (toolId: string): Promise<number> => {
     );
 
     if (!rpcError && typeof rpcTotal === 'number') {
-      const baseline = GLOBAL_TOOL_BASELINE_USES[toolId] || 0;
-      const calculated = Math.max(newCount, baseline + rpcTotal);
-      cachedCounts[toolId] = calculated;
+      cachedCounts[toolId] = rpcTotal;
       try {
         localStorage.setItem(USAGE_STORAGE_KEY, JSON.stringify(cachedCounts));
       } catch {}
-      return calculated;
+      window.dispatchEvent(new CustomEvent(USAGE_EVENT_NAME, { detail: { toolId, count: rpcTotal } }));
+      return rpcTotal;
     } else {
+      // Fallback to table upsert
       const { data: currentStat } = await supabase
         .from('global_tool_stats')
         .select('use_count')
         .eq('tool_id', toolId)
         .single();
 
-      const globalRemote = (Number(currentStat?.use_count) || 0) + 1;
+      const globalTotal = (Number(currentStat?.use_count) || 0) + 1;
 
       await supabase.from('global_tool_stats').upsert(
         {
           tool_id: toolId,
-          use_count: globalRemote,
+          use_count: globalTotal,
           last_used_at: new Date().toISOString(),
         },
         { onConflict: 'tool_id' }
       );
 
-      const baseline = GLOBAL_TOOL_BASELINE_USES[toolId] || 0;
-      const calculated = Math.max(newCount, baseline + globalRemote);
-      cachedCounts[toolId] = calculated;
+      cachedCounts[toolId] = globalTotal;
       try {
         localStorage.setItem(USAGE_STORAGE_KEY, JSON.stringify(cachedCounts));
       } catch {}
-      return calculated;
+      return globalTotal;
     }
   } catch (err) {
-    console.debug('Supabase global tool usage sync skipped / offline:', err);
+    console.debug('Supabase global tool usage sync:', err);
   }
 
   return newCount;
 };
 
 /**
- * React hook to reactively subscribe to live global tool usage counts
+ * React hook to reactively subscribe to real global tool usage counts
  */
 export const useToolUsageCounts = (): Record<string, number> => {
   const [counts, setCounts] = useState<Record<string, number>>(() => getToolUsageCounts());

@@ -10,7 +10,7 @@ import {
   SearchX,
 } from 'lucide-react';
 import { sound } from '../lib/soundFx';
-import { useToolUsageCounts, incrementToolUsage, GLOBAL_TOOL_BASELINE_USES } from '../lib/toolUsage';
+import { useToolUsageCounts, incrementToolUsage } from '../lib/toolUsage';
 import { SeoHead } from '../components/SeoHead';
 import { FeedbackWidget } from '../components/FeedbackWidget';
 
@@ -59,9 +59,12 @@ export const HomePage: React.FC<HomePageProps> = ({ onViewAudit }) => {
       }
       return true;
     }).sort((a, b) => {
-      const countA = usageCounts[a.id] ?? GLOBAL_TOOL_BASELINE_USES[a.id] ?? 0;
-      const countB = usageCounts[b.id] ?? GLOBAL_TOOL_BASELINE_USES[b.id] ?? 0;
-      return countB - countA;
+      const countA = usageCounts[a.id] || 0;
+      const countB = usageCounts[b.id] || 0;
+      if (countB !== countA) {
+        return countB - countA;
+      }
+      return 0;
     });
   }, [activeCategory, searchQuery, selectedTag, usageCounts]);
 
