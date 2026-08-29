@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { incrementToolUsage, getToolUsageCounts } from '../lib/toolUsage';
 import { SeoHead } from '../components/SeoHead';
+import { BuyMeACoffeeButton } from '../components/BuyMeACoffeeButton';
 
 // Code-split heavy workbenches for instant sub-second page loads & Lighthouse 95+ score
 const NodeCronWorkbench = React.lazy(() => import('../components/workbenches/NodeCronWorkbench').then(m => ({ default: m.NodeCronWorkbench })));
@@ -534,6 +535,9 @@ export const ToolDetailPage: React.FC<ToolDetailPageProps> = ({ onViewAudit }) =
               <Shield className="h-3.5 w-3.5 text-zinc-900" />
               <span className="hidden lg:inline">Audit</span>
             </button>
+
+            {/* Buy me a coffee (Dodo Payments) */}
+            <BuyMeACoffeeButton variant="compact" />
 
             {/* Source Code */}
             <a

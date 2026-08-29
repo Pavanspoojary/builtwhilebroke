@@ -7,6 +7,7 @@ import {
 import { CategoryId } from '../types/tool';
 import { TOOLS } from '../data/toolsData';
 import { sound } from '../lib/soundFx';
+import { BuyMeACoffeeButton } from './BuyMeACoffeeButton';
 
 interface FooterProps {
   onSelectCategory?: (id: CategoryId) => void;
@@ -38,8 +39,10 @@ export const Footer: React.FC<FooterProps> = ({
             <span className="text-zinc-500 text-[11px] font-mono font-medium">{TOOLS.length} In-Browser Workbenches</span>
           </div>
 
-          {/* Quick Legal & Purge Links */}
-          <div className="flex items-center gap-4 text-[11px] font-mono">
+          {/* Quick Legal, Coffee & Purge Links */}
+          <div className="flex flex-wrap items-center gap-4 text-[11px] font-mono">
+            <BuyMeACoffeeButton variant="footer" />
+
             <Link
               to="/legal"
               onClick={() => sound.click()}

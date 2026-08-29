@@ -8,6 +8,7 @@ import {
   VolumeX,
 } from 'lucide-react';
 import { sound } from '../lib/soundFx';
+import { BuyMeACoffeeButton } from './BuyMeACoffeeButton';
 
 interface HeaderProps {
   onOpenSearch: () => void;
@@ -130,6 +131,9 @@ export const Header: React.FC<HeaderProps> = ({
               ⌘K
             </kbd>
           </button>
+
+          {/* Buy me a coffee (Dodo Payments) */}
+          <BuyMeACoffeeButton variant="header" />
 
           {/* Commercial License Audit Modal Button */}
           <button

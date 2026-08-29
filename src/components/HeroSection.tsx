@@ -1,6 +1,7 @@
 import React from 'react';
 import { Search, X } from 'lucide-react';
 import { sound } from '../lib/soundFx';
+import { BuyMeACoffeeButton } from './BuyMeACoffeeButton';
 
 interface HeroSectionProps {
   searchQuery: string;
@@ -30,8 +31,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   totalCount,
 }) => {
   return (
-    <section className="relative pt-16 pb-10 sm:pt-24 sm:pb-14">
+    <section className="relative pt-12 pb-10 sm:pt-20 sm:pb-14">
       <div className="mx-auto max-w-4xl px-4 text-center sm:px-6">
+        {/* Top Supporter Pill */}
+        <div className="mb-6 flex justify-center">
+          <BuyMeACoffeeButton variant="hero" />
+        </div>
+
         {/* Editorial Headline: Bold Sans + Organic Cursive Script */}
         <h1 className="font-sans font-extrabold text-5xl sm:text-7xl lg:text-8xl tracking-tight text-zinc-950 flex flex-wrap items-baseline justify-center gap-x-3.5 gap-y-1">
           <span>BuiltWhile</span>
