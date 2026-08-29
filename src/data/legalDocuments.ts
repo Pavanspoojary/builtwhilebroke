@@ -101,6 +101,13 @@ export const LEGAL_DOCUMENTS: LegalDocument[] = [
           'Static assets (HTML, CSS, JavaScript, WebAssembly binaries, font files) are delivered via globally distributed static Content Delivery Networks (CDNs). CDN providers only receive standard network routing metadata (IP address, user-agent) necessary to deliver static bundle files to your browser.',
         ],
       },
+      {
+        sectionTitle: '4. Scope of Cloud Database Processing (Community Directory Only)',
+        paragraphs: [
+          'The only cloud database interaction on this platform occurs within the Community Requested Tools Directory (/requested) using Supabase PostgreSQL infrastructure. This is limited strictly to public tool suggestions, anonymous upvote tallies, and builder feedback.',
+          'No personal identifiers, confidential tokens, cryptographic material, or data processed within developer workbenches are ever processed or stored by Supabase.',
+        ],
+      },
     ],
   },
   {
@@ -154,13 +161,20 @@ export const LEGAL_DOCUMENTS: LegalDocument[] = [
       {
         sectionTitle: '3. Local Device Storage & Control',
         paragraphs: [
-          'Any persistent data (e.g. customized settings, locally stored SQLite databases) is saved directly in your browser’s private storage sandbox. You have unilateral authority to clear this data at any moment.',
+          'Any persistent data for workbenches (e.g. customized settings, locally stored SQLite/PostgreSQL databases, encryption keys) is saved directly in your browser’s private storage sandbox (localStorage and IndexedDB). You have unilateral authority to clear this data at any moment.',
         ],
       },
       {
-        sectionTitle: '4. Changes to this Policy',
+        sectionTitle: '4. Database Usage Scope (Community Requested Tools Directory Only)',
         paragraphs: [
-          'Because our architecture is stateless and serverless, our privacy commitments remain immutable. Any structural updates to this document will be transparently timestamped on this Legal Hub.',
+          'BuiltWhileBroke utilizes a managed cloud database (Supabase) strictly and exclusively for the Community Requested Tools Directory (/requested) and feedback widgets. This database persists public tool requests, anonymous upvote counters, and public builder comments.',
+          'Under no circumstances is Supabase or any remote database used to ingest, store, inspect, or log user payload data from any of the 34+ developer workbenches (e.g. PGlite queries, SQLime data, Hat.sh files, Inpaint images, Documenso signatures, CyberChef recipes). All workbench processing remains 100% in-browser with zero telemetry.',
+        ],
+      },
+      {
+        sectionTitle: '5. Changes to this Policy',
+        paragraphs: [
+          'Because our core architecture is client-side and privacy-first, our privacy commitments remain immutable. Any structural updates to this document will be transparently timestamped on this Legal Hub.',
         ],
       },
     ],

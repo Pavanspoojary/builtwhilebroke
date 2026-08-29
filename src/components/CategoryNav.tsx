@@ -40,7 +40,7 @@ export const CategoryNav: React.FC<CategoryNavProps> = ({
   return (
     <div className="w-full py-2">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex justify-center">
-        <div className="no-scrollbar flex items-center gap-1 overflow-x-auto rounded-2xl border border-zinc-200/90 bg-white/95 p-1.5 backdrop-blur-2xl shadow-[0_1px_4px_rgba(0,0,0,0.03)]">
+        <div className="no-scrollbar flex items-center gap-1 overflow-x-auto rounded-2xl border border-zinc-200/90 bg-white/90 p-1 backdrop-blur-xl shadow-sm">
           {categories.map((cat) => {
             const isActive = activeCategory === cat.id;
             const count = categoryCounts[cat.id] ?? 0;
@@ -52,19 +52,23 @@ export const CategoryNav: React.FC<CategoryNavProps> = ({
                   sound.toggle();
                   onSelectCategory(cat.id);
                 }}
-                className={`flex shrink-0 items-center gap-2 rounded-xl px-3.5 py-1.5 text-xs font-semibold transition-all duration-200 ${
+                className={`flex shrink-0 items-center gap-2 rounded-xl px-3.5 py-1.5 text-xs font-semibold transition-all ${
                   isActive
-                    ? 'bg-zinc-950 text-white shadow-sm'
+                    ? 'bg-zinc-900 text-white shadow-sm'
                     : 'text-zinc-600 hover:text-zinc-950 hover:bg-zinc-100/80'
                 }`}
               >
-                {getCategoryIcon(cat.icon, `h-3.5 w-3.5 ${isActive ? 'text-white' : 'text-zinc-500'}`)}
+                <div
+                  className={`flex items-center justify-center ${
+                    isActive ? 'text-white' : 'text-zinc-400'
+                  }`}
+                >
+                  {getCategoryIcon(cat.icon, 'h-3.5 w-3.5')}
+                </div>
                 <span>{cat.name}</span>
                 <span
-                  className={`rounded-md px-1.5 py-0.2 text-[10px] font-mono font-medium ${
-                    isActive
-                      ? 'bg-zinc-800 text-zinc-300'
-                      : 'bg-zinc-100 text-zinc-500'
+                  className={`text-[10px] font-mono rounded px-1 py-0.2 ${
+                    isActive ? 'bg-zinc-800 text-zinc-300' : 'bg-zinc-100 text-zinc-500'
                   }`}
                 >
                   {count}

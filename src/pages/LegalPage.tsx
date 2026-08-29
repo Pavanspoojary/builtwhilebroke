@@ -78,27 +78,24 @@ export const LegalPage: React.FC = () => {
                 <div
                   key={doc.id}
                   onClick={() => handleSelectDoc(doc)}
-                  className="group relative flex items-center justify-between rounded-2xl border border-zinc-200/90 bg-white p-6 sm:p-7 shadow-xs transition-all duration-200 hover:border-zinc-300 hover:shadow-md cursor-pointer"
+                  className="group relative flex items-center justify-between rounded-2xl border border-zinc-200/80 bg-white p-6 sm:p-7 shadow-[0_1px_3px_rgba(0,0,0,0.03),0_4px_12px_rgba(0,0,0,0.02)] hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.07),0_1px_3px_rgba(0,0,0,0.02)] hover:border-zinc-300 hover:-translate-y-1 active:scale-[0.99] transition-all duration-300 ease-out cursor-pointer overflow-hidden select-none"
                 >
+                  {/* Top Specular Accent Line */}
+                  <div className="pointer-events-none absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-zinc-900/15 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
                   <div className="pr-4">
                     <h2 className="font-sans text-base sm:text-lg font-bold tracking-tight text-zinc-950 group-hover:text-zinc-900 transition-colors">
                       {doc.title}
                     </h2>
-                    <p className="mt-1 text-xs text-zinc-500 font-normal">
+                    <p className="mt-1 text-xs text-zinc-400 font-mono font-medium">
                       Effective {doc.effectiveDate}
                     </p>
                   </div>
 
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleSelectDoc(doc);
-                    }}
-                    className="shrink-0 flex items-center gap-1 rounded-full border border-zinc-200/80 bg-zinc-50/90 px-3.5 py-1.5 text-xs font-medium text-zinc-700 transition-all group-hover:bg-zinc-900 group-hover:text-white group-hover:border-zinc-900"
-                  >
-                    <span>Read document</span>
-                    <ChevronRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
-                  </button>
+                  <div className="shrink-0 flex items-center gap-1.5 rounded-xl border border-zinc-200/80 bg-zinc-50 px-3.5 py-1.5 text-xs font-bold text-zinc-800 shadow-2xs transition-all duration-200 group-hover:bg-zinc-950 group-hover:text-white group-hover:border-zinc-950 group-hover:shadow-sm">
+                    <span>Read</span>
+                    <ChevronRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                  </div>
                 </div>
               ))}
             </div>

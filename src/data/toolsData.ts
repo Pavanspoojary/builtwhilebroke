@@ -4,7 +4,7 @@ export const CATEGORIES: Category[] = [
   {
     id: 'all',
     name: 'All Tools',
-    description: 'Complete suite of 23 curated open source developer, security, and creative powerhouses',
+    description: 'Complete suite of 34 curated open source developer, security, and creative powerhouses',
     icon: 'LayoutGrid',
   },
   {

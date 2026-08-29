@@ -12,6 +12,7 @@ import {
 import { sound } from '../lib/soundFx';
 import { useToolUsageCounts, incrementToolUsage } from '../lib/toolUsage';
 import { SeoHead } from '../components/SeoHead';
+import { FeedbackWidget } from '../components/FeedbackWidget';
 
 interface HomePageProps {
   onViewAudit: (tool: ToolItem) => void;
@@ -156,6 +157,9 @@ export const HomePage: React.FC<HomePageProps> = ({ onViewAudit }) => {
           </div>
         )}
       </main>
+
+      {/* Floating Bottom-Right Community & Tool Request Widget (Home Page only) */}
+      <FeedbackWidget />
     </div>
   );
 };

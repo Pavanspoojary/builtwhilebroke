@@ -44,6 +44,14 @@ export const Footer: React.FC<FooterProps> = ({
             <BuyMeACoffeeButton variant="footer" />
 
             <Link
+              to="/requested"
+              onClick={() => sound.click()}
+              className="flex items-center gap-1 text-zinc-600 hover:text-zinc-950 font-medium transition-colors"
+            >
+              <span>Requested Tools</span>
+            </Link>
+
+            <Link
               to="/legal"
               onClick={() => sound.click()}
               className="flex items-center gap-1 text-zinc-600 hover:text-zinc-950 font-medium transition-colors"

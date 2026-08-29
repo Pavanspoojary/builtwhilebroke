@@ -14,6 +14,7 @@ const HomePage = React.lazy(() => import('./pages/HomePage').then(m => ({ defaul
 const ToolsPage = React.lazy(() => import('./pages/ToolsPage').then(m => ({ default: m.ToolsPage })));
 const ToolDetailPage = React.lazy(() => import('./pages/ToolDetailPage').then(m => ({ default: m.ToolDetailPage })));
 const LegalPage = React.lazy(() => import('./pages/LegalPage').then(m => ({ default: m.LegalPage })));
+const RequestedToolsPage = React.lazy(() => import('./pages/RequestedToolsPage').then(m => ({ default: m.RequestedToolsPage })));
 
 const PageLoadingFallback: React.FC = () => (
   <div className="flex min-h-[60vh] w-full items-center justify-center">
@@ -94,7 +95,6 @@ function AppContent() {
       {!isToolDetailPage && (
         <div className="relative z-30">
           <Header
-            onOpenSearch={() => setIsCommandPaletteOpen(true)}
             onOpenLicenseAudit={() => {
               setSelectedToolForAudit(null);
               setIsLicenseAuditOpen(true);
@@ -124,6 +124,10 @@ function AppContent() {
             <Route
               path="/legal"
               element={<LegalPage />}
+            />
+            <Route
+              path="/requested"
+              element={<RequestedToolsPage />}
             />
             <Route
               path="*"
